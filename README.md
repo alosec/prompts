@@ -1,61 +1,75 @@
-# Model Prompts
+# Prompts
 
-This repository contains standardized instruction sets for AI model behaviors in development environments. Currently supporting Claude Desktop and Cline.
+A collection of prompt templates for AI-assisted development workflows. Includes agents, commands, and skills for Claude Code and other AI coding assistants.
 
 ## Directory Structure
 
 ```
-model-prompts/
-├── claude-desktop/ - Claude's desktop environment instructions
-│   ├── project/ - Project-level behaviors
-│   │   └── instructions.md - Defines behavior within projects
-│   └── system/ - System-level behaviors
-│       └── instructions.md - Defines system operations
-└── cline/ - Cline assistant instructions
-    └── extension/
-        └── instructions.md - Defines Cline's behavior and capabilities
+prompts/
+├── agents/          # Agent role definitions (planning, testing, research, etc.)
+├── commands/        # Workflow commands (/plan, /act, /chart, etc.)
+├── skills/          # Domain-specific knowledge (testing, deployment, etc.)
+└── legacy/          # Original claude-desktop and cline instructions
+    ├── claude-desktop/
+    └── cline/
 ```
 
-## Components
+## Agents
 
-### Claude Desktop
-The Claude Desktop instructions define behavior for Claude in desktop environments, including:
-- Project and system-level operations
-- Memory bank management
-- Documentation patterns
-- Mode behaviors (Plan/Act)
-- File operation formatting
-- Response prefixing rules
+Role definitions for specialized tasks:
 
-### Cline
-The Cline instructions define behavior for the Cline development assistant, featuring:
-- Enhanced mode indicators with task tracking
-- Memory bank structure
-- Project intelligence system
-- Documentation patterns
-- Communication formatting
+- **planning-agent** - Complex planning with codebase analysis
+- **testing-agent** - E2E testing with Playwright (token-efficient)
+- **coding-agent** - Implementation with isolated tracking
+- **analysis-agent** - Deep multi-file investigation
+- **research-agent** - Web searches for examples
+- **reference-agent** - Library source code analysis
+
+## Commands
+
+Workflow commands for development cycles:
+
+| Command | Purpose |
+|---------|---------|
+| `/prepare` | Load context (memory bank + git + issues) |
+| `/plan` | Create implementation plan with file tree |
+| `/elaborate` | Get file-level implementation details |
+| `/act` | Execute the plan systematically |
+| `/chart` | Update tracking systems (close the loop) |
+| `/research` | Research a topic with web search |
+| `/navigate` | Codebase navigation helper |
+
+Plus 40+ more commands for git, GitHub issues, deployment, etc.
+
+## Skills
+
+Domain-specific knowledge that auto-activates based on task:
+
+- **planning** - Feature planning with execution tasks
+- **testing** - E2E testing workflow with deployment
+- **quiet-build** - Filtered build output (reduces context noise)
+- **quiet-deploy** - Filtered deploy output
+- **playwright-cli** - Browser automation patterns
+- **slack-agents** - Slack bot development
+- **vnc-tunnel** - Remote GUI automation
+- And more...
 
 ## Usage
 
-### Claude Desktop
-1. Clone this repository
-2. Use `claude-desktop/project/instructions.md` for project-level behaviors
-3. Use `claude-desktop/system/instructions.md` for system operations
-4. Customize as needed while maintaining core functionality
+Reference prompts directly in your AI assistant:
 
-### Cline
-1. Clone this repository
-2. Use `cline/extension/instructions.md` for Cline configuration
-3. Follow the Memory Bank structure for project documentation
-4. Maintain .clinerules for project-specific patterns
+```bash
+# With pi coding agent
+pi @~/code/prompts/commands/plan.md "add user authentication"
 
-## Contributing
+# Or copy to your preferred location
+cp -r prompts/* ~/.prompts/
+```
 
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Submit a pull request with a clear description of changes
+## Legacy
+
+The `legacy/` directory contains the original Claude Desktop and Cline instruction sets that informed the evolution of these patterns. Preserved for reference.
 
 ## License
 
-This project is open source and available under the MIT license.
+MIT
