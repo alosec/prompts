@@ -114,7 +114,7 @@ browser-screenshot.js
 
 # Upload to image hosting (if available)
 # Use any image host: imgur, project-specific endpoint, or paste directly
-# Example: node upload-image.js /tmp/screenshot-*.png
+# Example: node upload.js /tmp/screenshot-*.png
 # Returns a public URL for the image
 ```
 
