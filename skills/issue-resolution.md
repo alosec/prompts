@@ -88,16 +88,34 @@ wrangler pages deploy dist/
 npm run deploy
 ```
 
+**Important:** Deployments from feature branches go to a preview URL, not production:
+- Preview URL format: `https://BRANCH-NAME.project.pages.dev`
+- Example: `https://fix-events-date-format.psyt-admin.pages.dev`
+- Use this preview URL for verification screenshots (your changes won't be on production yet!)
+
 ### 7. Screenshot Verification
 
-Capture visual evidence that the fix works:
+Capture visual evidence that the fix works.
+
+**Use the preview URL** from your deployment - your changes are there, not on production.
 
 ```bash
 # Start browser with cookies/auth
 export DISPLAY=:9 && browser-start.js --profile
 
-# Navigate to the affected area
-browser-nav.js "https://app.example.com/affected-page"
+# Set desktop viewport for better screenshots
+cd ~/code/agent-tools/browser-tools && node -e "
+const puppeteer = require('./node_modules/puppeteer-core');
+(async () => {
+  const browser = await puppeteer.connect({ browserURL: 'http://localhost:9222' });
+  const page = (await browser.pages()).at(-1);
+  await page.setViewport({ width: 1200, height: 800 });
+  await browser.disconnect();
+})();
+"
+
+# Navigate to the PREVIEW URL (not production!)
+browser-nav.js "https://BRANCH-NAME.project.pages.dev/affected-page"
 
 # Login if needed (React form pattern)
 browser-eval.js '(() => { 
@@ -111,14 +129,22 @@ browser-eval.js '(() => {
 # Capture screenshot
 browser-screenshot.js
 # Saves to /tmp/screenshot-TIMESTAMP.png
-
-# Upload to image hosting (if available)
-# Use any image host: imgur, project-specific endpoint, or paste directly
-# Example: node upload.js /tmp/screenshot-*.png
-# Returns a public URL for the image
 ```
 
-### 8. Document with Screenshot
+### 8. Upload Screenshot
+
+Use project-specific image hosting (e.g., psyt-admin has `/images` upload page):
+
+```bash
+# Navigate to image upload page
+browser-nav.js "https://project.pages.dev/images"
+
+# Upload using the upload script
+cd ~/code/agent-tools/browser-tools && node upload.js /tmp/screenshot-TIMESTAMP.png
+# Returns URL like: https://project.pages.dev/api/images/XXXX
+```
+
+### 9. Document with Screenshot
 
 Post the evidence to GitHub:
 
@@ -139,7 +165,7 @@ EOF
 gh issue comment <number> --body-file /tmp/resolved.md
 ```
 
-### 9. PR & Merge
+### 10. PR & Merge
 
 ```bash
 # Create PR
@@ -154,7 +180,7 @@ git pull
 git branch -d fix/short-description
 ```
 
-### 10. Close Issues
+### 11. Close Issues
 
 ```bash
 # Close GitHub issue (if not auto-closed by PR)
@@ -172,7 +198,7 @@ linearis issues update ABG-XX --state Done
 | Read GitHub | `gh issue view <num>` |
 | Branch | `git checkout -b fix/name` |
 | Screenshot | `browser-screenshot.js` |
-| Upload image | Upload to any image host (imgur, project endpoint, etc.) |
+| Upload image | `node upload.js /tmp/screenshot.png` (from browser-tools) |
 | PR | `gh pr create` |
 | Merge | `gh pr merge --squash` |
 | Close Linear | `linearis issues update ABG-XX --state Done` |
