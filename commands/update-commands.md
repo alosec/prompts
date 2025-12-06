@@ -1,62 +1,44 @@
-# Custom Command Management
+---
+name: Update Commands
+description: Sync prompts from ~/code/prompts to ~/.pi/agent/commands for pi-mono agent
+---
 
-Handle CRUD operations for custom Claude commands in project `.claude/commands/` directory.
+# Update Commands
 
-## Commands Directory Context
-- **Project Location**: `.claude/commands/` (project-specific commands)
-- **Global Location**: `~/.claude/commands/` (universal commands)
-- **Format**: Markdown files containing command prompts
-- **Naming**: `[command-name].md` maps to `/[command-name]` usage
+Sync prompt files from the prompts repository to pi-mono agent commands directory.
 
-## Available Operations
+## Workflow
 
-### CREATE
-Create new command file with specified prompt content.
+1. Edit/create prompts in `~/code/prompts/commands/` or `~/code/prompts/skills/`
+2. Run sync script: `~/code/prompts/sync-to-pi.sh`
+3. Commit changes to prompts repo
 
-### READ  
-Display existing command file contents.
+## Locations
 
-### UPDATE
-Modify existing command prompt or description.
+```
+Source (tracked in git)
+├── ~/code/prompts/commands/*.md
+└── ~/code/prompts/skills/*.md
 
-### DELETE
-Remove command file from directory.
+Destination (pi-mono agent)
+├── ~/.pi/agent/commands/*.md
+└── ~/.pi/agent/commands/skills/*.md
+```
 
-### LIST
-Show all available custom commands in current scope.
+## Quick Sync
 
-### MOVE
-Move command between project and global scope.
+```bash
+~/code/prompts/sync-to-pi.sh
+```
 
-## Command File Structure
-- Filename: `[name].md`
-- Content: Prompt text executed when `/[name]` is used
-- Variables: Use `$ARGUMENTS` for dynamic input
-- Format: Plain markdown with clear instructions
+## Manual Single File
 
-## Operation Guidelines
+```bash
+cp ~/code/prompts/commands/foo.md ~/.pi/agent/commands/
+```
 
-### For Command Files:
-- **CREATE**: Requires name and prompt content
-- **READ**: Display file contents for review
-- **UPDATE**: Modify existing command prompts
-- **DELETE**: Remove unused command files
-- **LIST**: Show directory contents
-- **MOVE**: Transfer between project and global directories
+## After Changes
 
-## Scope Management
-- **Project Commands**: Located in `.claude/commands/` (project root)
-- **Global Commands**: Located in `~/.claude/commands/` (user home)
-- **Priority**: Project commands override global commands with same name
-- **Access**: Global commands available everywhere; project commands only in project context
-
-## User Request Processing
-Based on $ARGUMENTS, determine the appropriate operation:
-
-1. **Parse Action**: CREATE, READ, UPDATE, DELETE, LIST, or MOVE
-2. **Identify Target**: Command name and parameters
-3. **Determine Scope**: Project vs global directory
-4. **Execute Operation**: File system operations in appropriate directory
-5. **Provide Feedback**: Confirm changes and show results
-
-Process this request: $ARGUMENTS
+```bash
+cd ~/code/prompts && git add -A && git commit -m "Add/update command" && git push
+```

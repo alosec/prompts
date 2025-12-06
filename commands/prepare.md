@@ -4,9 +4,18 @@
 
 ## What I'll Do
 
-Quick workspace prep - read the memory bank to get oriented, check current project status, then get ready to tackle whatever you need.
+Quick workspace prep - read the project memory bank to get oriented, optionally check global memory bank for cross-project context, then get ready to tackle whatever you need.
 
-## Memory Bank Review Strategy
+## Global Memory Bank (Optional)
+
+If the task spans multiple projects or needs broader context, check `~/global-memory-bank/`:
+- `00-core/active-focus.md` - Current priorities across all projects
+- `01-patterns/` - Reusable patterns that might apply
+- `03-learnings/` - Technical gotchas relevant to this work
+
+Only read global context if it's relevant to the task. For project-specific work, the project memory bank is sufficient.
+
+## Project Memory Bank Review Strategy
 
 First, I'll check what memory bank structure exists in this project:
 - **New structure** (post-Oct 2025): Organized folders (00-core, 01-architecture, 02-active, etc.)
